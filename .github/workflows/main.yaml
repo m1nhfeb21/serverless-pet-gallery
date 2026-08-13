@@ -7,3 +7,13 @@ jobs:
     steps:
       - name: Run a simple command
         run: echo "Hello from GitHub Actions"
+
+  job_B:
+    runs-on: ubuntu-latest
+    steps:
+      - run: df -h
+
+  job_c:
+    runs-on: ubuntu-latest
+    steps:
+      - run: free -h

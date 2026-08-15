@@ -25,7 +25,7 @@ jobs:
     needs: [job_1, job_2]
     steps:
       - name: Gửi email với attachment (nếu 200)
-        if: ${{${{need.job_1.outputs.data}} + ${{needs.job_2.outputs.data}}}}==3
+        if: ${{${{need.job_1.outputs.data}} ${{needs.job_2.outputs.data}}}}==3
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.gmail.com

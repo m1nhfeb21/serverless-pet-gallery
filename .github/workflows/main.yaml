@@ -1,21 +1,38 @@
 name: demo
 on:
-  workflow_dispatch:
+  push:
+    branches: [main]
 jobs:
-  job_demo:
+  job_1:
     runs-on: ubuntu-latest
+    outputs:
+      data: "${{steps.step_id.}}"
     steps:
-      - name: Run a simple command
-        run: echo "Hello from GitHub Actions"
+      - id: step_id
+        run: echo "data_in=1" >> $GITHUB_OUTPUT
 
-  job_B:
+  job_2:
     runs-on: ubuntu-latest
-    needs: [job_demo]
+    needs: [job_1]
+    outputs:
+      data: "${{steps.step_id.}}"
     steps:
-      - run: df -h
+      - id: step_id
+        run: echo "data_in=2" >> $GITHUB_OUTPUT
 
-  job_c:
+  job_3:
     runs-on: ubuntu-latest
-    needs: [job_B]
+    needs: [job_1, job_2]
     steps:
-      - run: free -h
+      - name: Gửi email với attachment (nếu 200)
+        if: ${{${{need.job_1.outputs.data}} + ${{needs.job_2.outputs.data}}}}==3
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 587
+          username: ngocminh2006nh@gmail.com
+          password: "njbkrwbzsvzuminx"
+          subject: "Đây tiêu đề gửi github action"
+          body: "API trả về 200, kèm file response.json"
+          to: ngocminh2006nh@gmail.com
+          from: ngocminh2006nh@gmail.com
